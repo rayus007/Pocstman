@@ -1,0 +1,129 @@
+{
+	"info": {
+		"_postman_id": "7ce73842-bc37-4bf8-a04f-4b460bf20cba",
+		"name": "POC-Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getUsersVisualizer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "513a09cb-8620-4ecf-b653-33592e62f894",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"is_empty = true\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify that the response is an Array\", ()=>{\r",
+							"    pm.expect(jsonData.data).to.be.an(\"array\").that.is.not.empty\r",
+							"    is_empty = false\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Verify response schema\", ()=>{\r",
+							"    jsonData.data.forEach((item)=>{\r",
+							"        pm.expect(item.id).to.exist.and.to.be.an(\"string\")\r",
+							"        pm.expect(item.name).to.exist.and.to.be.an(\"string\")\r",
+							"        pm.expect(item.image).to.exist.and.to.be.an(\"string\")\r",
+							"    })\r",
+							"})\r",
+							"\r",
+							"template = `\r",
+							"    <style type=\"text/css\">\r",
+							"        .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+							"        .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+							"        .tftable tr {background-color:#ffffff;}\r",
+							"        .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+							"        .tftable tr:hover {background-color:#e0ffff;}\r",
+							"    </style>\r",
+							"<table class=\"tftable\" border=\"1\">\r",
+							"    <tr>\r",
+							"        <th>ID</th>\r",
+							"        <th>Name</th>\r",
+							"        <th>Image</th>\r",
+							"    </tr>\r",
+							"    {{#each response.data}}\r",
+							"    <tr>\r",
+							"        <td>{{id}}</td>\r",
+							"        <td>{{name}}</td>\r",
+							"        <td>{{image}}</td>\r",
+							"    </tr>\r",
+							"    {{/each}}\r",
+							"</table>\r",
+							"`;\r",
+							"\r",
+							"pm.visualizer.set(template, {\r",
+							"    response: jsonData\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "7e8faec6-5c2a-4513-affb-27cea804b2f4",
+						"exec": [
+							"pm.sendRequest({\r",
+							"    url: 'https://auth.ses-unit.com/auth/realms/meetpoint'+pm.variables.get('environment')+'/protocol/openid-connect/token',\r",
+							"    method: 'POST',\r",
+							"    body: {\r",
+							"        mode: 'urlencoded',\r",
+							"        urlencoded: [\r",
+							"            { key: \"username\", value: pm.variables.get('UserName#0') },\r",
+							"            { key: \"password\", value: pm.variables.get('Password#0') },\r",
+							"            { key: \"grant_type\", value: \"password\" },\r",
+							"            { key: \"client_id\", value: \"meetpoint-webapp\" }\r",
+							"        ]\r",
+							"    }\r",
+							"}, function (err, res) {\r",
+							"    if (err === null) {\r",
+							"        pm.environment.set(\"Access_token\", res.json()[\"access_token\"]);\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"_postman_id": "11c447db-0ca6-4138-9655-85eb2617fd33",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{Access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{endpoint}}/api/v2/users",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"users"
+					],
+					"query": [
+						{
+							"key": "filter[name]",
+							"value": "QA First",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
