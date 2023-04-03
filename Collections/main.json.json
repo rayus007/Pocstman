@@ -16,7 +16,7 @@
 							"var jsonData = JSON.parse(responseBody);\r",
 							"is_empty = true\r",
 							"\r",
-							"pm.test(\"Status code is 200\", function () {\r",
+							"pm.test(\"Status code is 201\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
@@ -91,7 +91,7 @@
 					}
 				}
 			],
-			"_postman_id": "11c447db-0ca6-4138-9655-85eb2617fd33",
+			"id": "11c447db-0ca6-4138-9655-85eb2617fd33",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
