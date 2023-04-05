@@ -16,7 +16,7 @@
 							"var jsonData = JSON.parse(responseBody);\r",
 							"is_empty = true\r",
 							"\r",
-							"pm.test(\"Status code is 200 FOR ERICK\", function () {\r",
+							"pm.test(\"Status code is 200 FOR MAURICIO\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
